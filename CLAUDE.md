@@ -2,14 +2,37 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Current state
+## Overview
 
-This repository is currently a skeleton: it contains only `README.md` and has no source code, build system, dependencies, or tests yet. The project is named `claude-code-cycle-monitor`.
+`claude-code-cycle-monitor` downloads the latest Santander Cycles (London) data from
+the citybik.es API and visualises docking-station distribution and live availability in
+a small Flask web UI.
 
-There are no build, lint, or test commands to document at this time.
+## Commands
 
-## Maintaining this file
+Setup (Python 3.13):
 
-As the codebase takes shape, update this file with:
-- Common commands (build, lint, run, and how to run a single test) once a toolchain is chosen.
-- The high-level architecture — the "big picture" that requires reading multiple files to understand — once modules exist.
+```bash
+python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+```
+
+- Fetch a fresh data snapshot: `python -m cycle_monitor.fetch`
+- Run the web UI: `python -m cycle_monitor.app` (serves http://localhost:5001;
+  port 5000 is avoided because macOS Control Center/AirPlay listens on it. Override with `PORT`.)
+
+There is no test suite or linter configured yet.
+
+## Architecture
+
+- `cycle_monitor/fetch.py` — fetches `https://api.citybik.es/v2/networks/santander-cycles`,
+  writes a timestamped snapshot to `data/` and overwrites `data/latest.json`. This is the
+  single source of downloaded data; the web layer never calls the API directly.
+- `cycle_monitor/app.py` — Flask app. `build_summary()` normalises the raw citybik.es
+  payload into a compact station shape; `load_latest()` reads `data/latest.json` (calling
+  `fetch_latest()` if it is missing). Routes: `/` (UI), `/api/stations` (GET, current
+  data), `/api/refresh` (POST, fetch then return).
+- `cycle_monitor/templates/index.html` — self-contained front end (Leaflet map + Chart.js
+  via CDN). Calls `/api/stations` on load and `/api/refresh` on the refresh button.
+
+Data flow: `fetch.py` → `data/latest.json` → `app.build_summary` → `/api/*` JSON →
+`index.html`. Snapshots under `data/` are gitignored.
