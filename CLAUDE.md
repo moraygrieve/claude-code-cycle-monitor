@@ -13,7 +13,7 @@ a small Flask web UI.
 Setup (Python 3.13):
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
 ```
 
 - Fetch a fresh data snapshot: `python -m cycle_monitor.fetch`
