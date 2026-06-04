@@ -17,7 +17,8 @@ python3 -m venv .venv && source .venv/bin/activate && pip install -r requirement
 ```
 
 - Fetch a fresh data snapshot: `python -m cycle_monitor.fetch`
-- Run the web UI: `python -m cycle_monitor.app` (serves http://127.0.0.1:5000)
+- Run the web UI: `python -m cycle_monitor.app` (serves http://localhost:5001;
+  port 5000 is avoided because macOS Control Center/AirPlay listens on it. Override with `PORT`.)
 
 There is no test suite or linter configured yet.
 

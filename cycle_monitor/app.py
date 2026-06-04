@@ -2,12 +2,16 @@
 
     python -m cycle_monitor.app
 
-Then open http://127.0.0.1:5000
+Then open http://localhost:5001
+
+Port 5000 is avoided because macOS Control Center (AirPlay Receiver)
+listens on it; set PORT to override.
 """
 
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from flask import Flask, jsonify, render_template
@@ -82,4 +86,4 @@ def api_refresh():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=int(os.environ.get("PORT", 5001)))

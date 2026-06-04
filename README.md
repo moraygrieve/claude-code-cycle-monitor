@@ -27,7 +27,7 @@ Run the web UI (fetches data automatically on first load if none exists):
 python -m cycle_monitor.app
 ```
 
-Then open <http://127.0.0.1:5000>. The page shows:
+Then open <http://localhost:5001>. The page shows:
 
 - An interactive map of all ~800 docking stations, colour-coded by bike availability.
 - Summary stats (total bikes, empty docks, empty/full stations).
